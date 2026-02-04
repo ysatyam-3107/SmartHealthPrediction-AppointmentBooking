@@ -21,6 +21,26 @@
         <servlet-name>NewServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.NewServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Getavailabletimeslotsservlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.Getavailabletimeslotsservlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Doctorcancelappointmentservlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.Doctorcancelappointmentservlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateDoctorProfileServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UpdateDoctorProfileServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateDoctorPhotoServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UpdateDoctorPhotoServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChangeDoctorPasswordServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.ChangeDoctorPasswordServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserRegisterServlet</servlet-name>
         <url-pattern>/UserRegisterServlet</url-pattern>
@@ -122,6 +142,26 @@
     <servlet-mapping>
         <servlet-name>NewServlet</servlet-name>
         <url-pattern>/NewServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Getavailabletimeslotsservlet</servlet-name>
+        <url-pattern>/Getavailabletimeslotsservlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Doctorcancelappointmentservlet</servlet-name>
+        <url-pattern>/Doctorcancelappointmentservlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateDoctorProfileServlet</servlet-name>
+        <url-pattern>/UpdateDoctorProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateDoctorPhotoServlet</servlet-name>
+        <url-pattern>/UpdateDoctorPhotoServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangeDoctorPasswordServlet</servlet-name>
+        <url-pattern>/ChangeDoctorPasswordServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

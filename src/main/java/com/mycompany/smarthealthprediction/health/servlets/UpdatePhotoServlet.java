@@ -83,7 +83,7 @@ public class UpdatePhotoServlet extends HttpServlet {
             String applicationPath = request.getServletContext().getRealPath("");
             String uploadPath = applicationPath + File.separator + UPLOAD_DIR;
             
-            // Create directory if not exists
+            // Create directory
             File uploadDir = new File(uploadPath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();

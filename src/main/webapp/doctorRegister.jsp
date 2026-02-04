@@ -56,6 +56,12 @@
         hr {
             border: 1px solid #ccc;
         }
+        .time-slot-info {
+            background: #e6f4ea;
+            border-left: 4px solid #198754;
+            padding: 15px;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -212,9 +218,38 @@
                                 </div>
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Available Time *</label>
-                                <input type="text" class="form-control" name="availableTime" placeholder="e.g., 9:00 AM - 5:00 PM" required>
+                            <hr class="my-4">
+                            <h5 class="mb-3 text-success"><i class="fas fa-clock"></i> Appointment Time Settings</h5>
+
+                            <div class="time-slot-info mb-3">
+                                <i class="fas fa-info-circle"></i> <strong>How it works:</strong><br>
+                                <small>Set your working hours and appointment duration. The system will automatically create time slots for patients to book.</small>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Start Time *</label>
+                                    <input type="time" class="form-control" name="startTime" id="startTime" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">End Time *</label>
+                                    <input type="time" class="form-control" name="endTime" id="endTime" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Slot Duration *</label>
+                                    <select class="form-select" name="slotDuration" id="slotDuration" required>
+                                        <option value="">Select duration...</option>
+                                        <option value="15">15 minutes</option>
+                                        <option value="30" selected>30 minutes</option>
+                                        <option value="45">45 minutes</option>
+                                        <option value="60">1 hour</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info" id="slotPreview" style="display: none;">
+                                <strong><i class="fas fa-calendar-alt"></i> Your time slots will be:</strong>
+                                <div id="slotList" class="mt-2"></div>
                             </div>
 
                             <button type="submit" class="btn btn-success w-100 mt-4">
@@ -264,6 +299,51 @@
                 reader.readAsDataURL(file);
             }
         }
+
+        // Preview time slots
+        function generateTimeSlots() {
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+            const duration = parseInt(document.getElementById('slotDuration').value);
+
+            if (!startTime || !endTime || !duration) {
+                document.getElementById('slotPreview').style.display = 'none';
+                return;
+            }
+
+            const start = new Date('1970-01-01T' + startTime);
+            const end = new Date('1970-01-01T' + endTime);
+
+            if (start >= end) {
+                alert('End time must be after start time');
+                return;
+            }
+
+            const slots = [];
+            let current = new Date(start);
+
+            while (current < end) {
+                const hours = current.getHours();
+                const minutes = current.getMinutes();
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const displayHours = hours % 12 || 12;
+                const timeStr = `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+                slots.push(timeStr);
+                current.setMinutes(current.getMinutes() + duration);
+            }
+
+            if (slots.length > 0) {
+                document.getElementById('slotPreview').style.display = 'block';
+                document.getElementById('slotList').innerHTML = slots.map(slot => 
+                    `<span class="badge bg-success me-2 mb-2">${slot}</span>`
+                ).join('');
+            }
+        }
+
+        // Add event listeners
+        document.getElementById('startTime').addEventListener('change', generateTimeSlots);
+        document.getElementById('endTime').addEventListener('change', generateTimeSlots);
+        document.getElementById('slotDuration').addEventListener('change', generateTimeSlots);
     </script>
 
 </body>
