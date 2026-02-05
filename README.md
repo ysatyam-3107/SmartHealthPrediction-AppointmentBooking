@@ -76,5 +76,7 @@ Frontend  →  Backend  →  Database  →  ML Module
 👨‍💻 Author
 
 Satyam Yadav
+
 TYIT — SmartHealth Project
+
 Guide: Gauri Thakur
