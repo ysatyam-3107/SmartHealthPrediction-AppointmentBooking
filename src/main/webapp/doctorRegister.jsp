@@ -40,7 +40,7 @@
             transform: scale(1.03);
             box-shadow: 0 3px 8px rgba(0,0,0,0.2);
         }
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             border-color: #198754;
             box-shadow: 0 0 5px rgba(25, 135, 84, 0.5);
         }
@@ -61,6 +61,24 @@
             border-left: 4px solid #198754;
             padding: 15px;
             border-radius: 8px;
+        }
+        .day-checkbox {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .day-checkbox input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .day-checkbox label {
+            cursor: pointer;
+            user-select: none;
+            padding-left: 8px;
+        }
+        .day-checkbox:hover {
+            background-color: #f0f0f0;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -109,7 +127,7 @@
                         <% } %>
 
                         <!-- ✅ enctype added for file upload -->
-                        <form action="DoctorRegisterServlet" method="post" enctype="multipart/form-data">
+                        <form action="DoctorRegisterServlet" method="post" enctype="multipart/form-data" id="registrationForm">
                             <h5 class="mb-3 text-success"><i class="fas fa-user"></i> Personal Information</h5>
 
                             <!-- Profile Photo Upload -->
@@ -199,7 +217,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Location *</label>
-                                    <input type="text" class="form-control" name="location" placeholder="e.g., Mumbai, Andheri" required>
+                                    <input type="text" class="form-control" name="location" placeholder="e.g., Pune, Maharashtra" required>
                                 </div>
                             </div>
 
@@ -212,9 +230,65 @@
                                     <label class="form-label">Consultation Fee (₹) *</label>
                                     <input type="number" class="form-control" name="consultationFee" min="0" step="0.01" required>
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Available Days *</label>
-                                    <input type="text" class="form-control" name="availableDays" placeholder="e.g., Mon-Fri" required>
+                            </div>
+
+                            <hr class="my-4">
+                            <h5 class="mb-3 text-success"><i class="fas fa-calendar-check"></i> Availability Schedule</h5>
+
+                            <div class="mb-3">
+                                <label class="form-label d-block">Available Days * <small class="text-muted">(Select one or more)</small></label>
+                                <div class="row">
+                                    <div class="col-md-3 col-6 mb-2">
+                                        <div class="day-checkbox p-2">
+                                            <input type="checkbox" name="availableDays" value="Monday" id="mon">
+                                            <label for="mon">Monday</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-6 mb-2">
+                                        <div class="day-checkbox p-2">
+                                            <input type="checkbox" name="availableDays" value="Tuesday" id="tue">
+                                            <label for="tue">Tuesday</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-6 mb-2">
+                                        <div class="day-checkbox p-2">
+                                            <input type="checkbox" name="availableDays" value="Wednesday" id="wed">
+                                            <label for="wed">Wednesday</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-6 mb-2">
+                                        <div class="day-checkbox p-2">
+                                            <input type="checkbox" name="availableDays" value="Thursday" id="thu">
+                                            <label for="thu">Thursday</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-6 mb-2">
+                                        <div class="day-checkbox p-2">
+                                            <input type="checkbox" name="availableDays" value="Friday" id="fri">
+                                            <label for="fri">Friday</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-6 mb-2">
+                                        <div class="day-checkbox p-2">
+                                            <input type="checkbox" name="availableDays" value="Saturday" id="sat">
+                                            <label for="sat">Saturday</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-6 mb-2">
+                                        <div class="day-checkbox p-2">
+                                            <input type="checkbox" name="availableDays" value="Sunday" id="sun">
+                                            <label for="sun">Sunday</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="availableDaysString" id="availableDaysString" required>
+                                <small class="text-danger" id="daysError" style="display: none;">Please select at least one day</small>
+                            </div>
+
+                            <div class="alert alert-info mb-3">
+                                <strong><i class="fas fa-info-circle"></i> Selected Days:</strong>
+                                <div id="selectedDaysDisplay" class="mt-2">
+                                    <em class="text-muted">No days selected yet</em>
                                 </div>
                             </div>
 
@@ -272,19 +346,17 @@
     <!-- ✅ JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- ✅ Image Preview JS -->
     <script>
+        // Image preview
         function previewImage(event) {
             const file = event.target.files[0];
             if (file) {
-                // Validate file size (5MB max)
                 if (file.size > 5 * 1024 * 1024) {
                     alert('File size should not exceed 5MB');
                     event.target.value = '';
                     return;
                 }
                 
-                // Validate file type
                 if (!file.type.match('image.*')) {
                     alert('Please select a valid image file');
                     event.target.value = '';
@@ -293,12 +365,44 @@
                 
                 const reader = new FileReader();
                 reader.onload = function(){
-                    const output = document.getElementById('photoPreview');
-                    output.src = reader.result;
+                    document.getElementById('photoPreview').src = reader.result;
                 };
                 reader.readAsDataURL(file);
             }
         }
+
+        // Handle day selection
+        const dayCheckboxes = document.querySelectorAll('input[name="availableDays"]');
+        const selectedDaysDisplay = document.getElementById('selectedDaysDisplay');
+        const availableDaysString = document.getElementById('availableDaysString');
+        const daysError = document.getElementById('daysError');
+
+        function updateSelectedDays() {
+            const selected = [];
+            dayCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selected.push(checkbox.value);
+                }
+            });
+
+            if (selected.length > 0) {
+                // Create short form display (Mon, Tue, Wed, etc.)
+                const shortNames = selected.map(day => day.substring(0, 3));
+                selectedDaysDisplay.innerHTML = '<span class="badge bg-success me-1 mb-1">' + 
+                    shortNames.join('</span> <span class="badge bg-success me-1 mb-1">') + '</span>';
+                
+                // Store comma-separated full names for database
+                availableDaysString.value = shortNames.join(', ');
+                daysError.style.display = 'none';
+            } else {
+                selectedDaysDisplay.innerHTML = '<em class="text-muted">No days selected yet</em>';
+                availableDaysString.value = '';
+            }
+        }
+
+        dayCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateSelectedDays);
+        });
 
         // Preview time slots
         function generateTimeSlots() {
@@ -316,6 +420,7 @@
 
             if (start >= end) {
                 alert('End time must be after start time');
+                document.getElementById('endTime').value = '';
                 return;
             }
 
@@ -340,10 +445,20 @@
             }
         }
 
-        // Add event listeners
         document.getElementById('startTime').addEventListener('change', generateTimeSlots);
         document.getElementById('endTime').addEventListener('change', generateTimeSlots);
         document.getElementById('slotDuration').addEventListener('change', generateTimeSlots);
+
+        // Form validation
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            const selected = document.querySelectorAll('input[name="availableDays"]:checked');
+            if (selected.length === 0) {
+                e.preventDefault();
+                daysError.style.display = 'block';
+                alert('Please select at least one available day');
+                return false;
+            }
+        });
     </script>
 
 </body>

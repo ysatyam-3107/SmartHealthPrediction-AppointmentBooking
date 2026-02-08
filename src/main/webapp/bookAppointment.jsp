@@ -83,7 +83,7 @@
                         <form action="bookAppointment.jsp" method="get" id="doctorForm">
                             <div class="mb-3">
                                 <label class="form-label">Select Doctor *</label>
-                                <select class="form-select" name="selectedDoctorId" id="doctorSelect" required onchange="this.form.submit()">
+                                <select class="form-select" name="selectedDoctorId" id="doctorSelect" required onchange="if(this.value) this.form.submit();">
                                     <option value="">Choose a doctor...</option>
                                     <%
                                         Connection conn = null;
@@ -92,6 +92,16 @@
                                         
                                         String selectedDoctorId = request.getParameter("selectedDoctorId");
                                         String selectedDate = request.getParameter("selectedDate");
+                                        
+                                        boolean hasValidDoctor = false;
+                                        if (selectedDoctorId != null && !selectedDoctorId.trim().isEmpty()) {
+                                            try {
+                                                Integer.parseInt(selectedDoctorId);
+                                                hasValidDoctor = true;
+                                            } catch (NumberFormatException e) {
+                                                selectedDoctorId = null;
+                                            }
+                                        }
                                         
                                         try {
                                             conn = DBConnection.getConnection();
@@ -103,7 +113,7 @@
                                             
                                             while (rs.next()) {
                                                 int doctorId = rs.getInt("doctor_id");
-                                                boolean isSelected = selectedDoctorId != null && doctorId == Integer.parseInt(selectedDoctorId);
+                                                boolean isSelected = hasValidDoctor && (doctorId == Integer.parseInt(selectedDoctorId));
                                     %>
                                                 <option value="<%= doctorId %>" <%= isSelected ? "selected" : "" %>>
                                                     Dr. <%= rs.getString("full_name") %> - <%= rs.getString("specialization") %> (₹<%= rs.getDouble("consultation_fee") %>)
@@ -123,7 +133,7 @@
                         </form>
                         
                         <%
-                        if (selectedDoctorId != null) {
+                        if (hasValidDoctor) {
                             conn = null;
                             pstmt = null;
                             rs = null;
@@ -140,51 +150,114 @@
                                     String endTime = rs.getString("end_time");
                                     int slotDuration = rs.getInt("slot_duration");
                                     String photoPath = rs.getString("profile_photo");
+                                    String availableDays = rs.getString("available_days"); // "Mon, Wed, Fri"
                         %>
                         
-                        <div class="alert alert-info">
-                            <div class="row align-items-center">
-                                <div class="col-md-3 text-center">
-                                    <% if (photoPath != null && !photoPath.isEmpty()) { %>
-                                        <img src="<%= photoPath %>" alt="Doctor" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #0d6efd;">
-                                    <% } else { %>
-                                        <img src="https://ui-avatars.com/api/?name=<%= rs.getString("full_name") %>&size=80&background=0d6efd&color=fff" alt="Doctor" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #0d6efd;">
-                                    <% } %>
-                                </div>
-                                <div class="col-md-9">
-                                    <strong>Doctor Availability:</strong><br>
-                                    <i class="fas fa-calendar-alt"></i> Days: <%= rs.getString("available_days") %><br>
-                                    <i class="fas fa-clock"></i> Time: <%= startTime %> - <%= endTime %><br>
-                                    <i class="fas fa-hourglass-half"></i> Slot Duration: <%= slotDuration %> minutes
+                        <!-- Doctor Details Card -->
+                        <div class="card mb-3 border-0" style="background: linear-gradient(135deg, #e3f2fd 0%, #f5f5f5 100%);">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 text-center">
+                                        <% if (photoPath != null && !photoPath.isEmpty()) { %>
+                                            <img src="<%= photoPath %>" alt="Dr. <%= rs.getString("full_name") %>" 
+                                                 class="rounded-circle shadow" 
+                                                 style="width: 100px; height: 100px; object-fit: cover; border: 4px solid #fff;">
+                                        <% } else { %>
+                                            <img src="https://ui-avatars.com/api/?name=<%= rs.getString("full_name") %>&size=100&background=0d6efd&color=fff&bold=true" 
+                                                 alt="Dr. <%= rs.getString("full_name") %>" 
+                                                 class="rounded-circle shadow" 
+                                                 style="width: 100px; height: 100px; object-fit: cover; border: 4px solid #fff;">
+                                        <% } %>
+                                        <p class="mt-2 mb-0 fw-bold text-primary">Dr. <%= rs.getString("full_name") %></p>
+                                        <small class="text-muted"><%= rs.getString("specialization") %></small>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <h6 class="text-primary mb-3"><i class="fas fa-info-circle"></i> Doctor Information</h6>
+                                        
+                                        <div class="row mb-2">
+                                            <div class="col-md-6">
+                                                <p class="mb-1">
+                                                    <i class="fas fa-hospital text-danger"></i> 
+                                                    <strong>Hospital:</strong><br>
+                                                    <small class="ms-4"><%= rs.getString("hospital_name") %></small>
+                                                </p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="mb-1">
+                                                    <i class="fas fa-map-marker-alt text-success"></i> 
+                                                    <strong>Location:</strong><br>
+                                                    <small class="ms-4"><%= rs.getString("location") %></small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mb-2">
+                                            <div class="col-md-6">
+                                                <p class="mb-1">
+                                                    <i class="fas fa-calendar-alt text-primary"></i> 
+                                                    <strong>Available Days:</strong><br>
+                                                    <small class="ms-4"><%= availableDays %></small>
+                                                </p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="mb-1">
+                                                    <i class="fas fa-clock text-warning"></i> 
+                                                    <strong>Timings:</strong><br>
+                                                    <small class="ms-4"><%= startTime %> - <%= endTime %></small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p class="mb-0">
+                                                    <i class="fas fa-hourglass-half text-info"></i> 
+                                                    <strong>Slot Duration:</strong><br>
+                                                    <small class="ms-4"><%= slotDuration %> minutes</small>
+                                                </p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="mb-0">
+                                                    <i class="fas fa-rupee-sign text-success"></i> 
+                                                    <strong>Consultation Fee:</strong><br>
+                                                    <small class="ms-4 text-success fw-bold">₹<%= rs.getDouble("consultation_fee") %></small>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
                         <form action="bookAppointment.jsp" method="get">
                             <input type="hidden" name="selectedDoctorId" value="<%= selectedDoctorId %>">
+                            <input type="hidden" id="doctorAvailableDays" value="<%= availableDays %>">
                             <div class="mb-3">
-                                <label class="form-label">Appointment Date *</label>
+                                <label class="form-label">Appointment Date * 
+                                    <small class="text-muted">(Only <%= availableDays %> are available)</small>
+                                </label>
                                 <%
-                                    // Use java.util.Date explicitly
                                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                                     String today = dateFormat.format(new java.util.Date());
                                 %>
-                                <input type="date" class="form-control" name="selectedDate" 
+                                <input type="date" class="form-control" name="selectedDate" id="dateInput"
                                        value="<%= selectedDate != null ? selectedDate : "" %>"
                                        required min="<%= today %>"
                                        onchange="this.form.submit()">
+                                <small class="text-info" id="dateWarning" style="display: none;">
+                                    <i class="fas fa-exclamation-circle"></i> This day is not available. Please select: <%= availableDays %>
+                                </small>
                             </div>
                         </form>
                         
                         <% 
-                        if (selectedDate != null) {
+                        if (selectedDate != null && !selectedDate.trim().isEmpty()) {
                             // Generate all time slots
                             List<String> allSlots = new ArrayList<String>();
                             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
                             SimpleDateFormat displayFormat = new SimpleDateFormat("h:mm a");
                             
                             try {
-                                // Use java.util.Date explicitly
                                 java.util.Date start = sdf.parse(startTime);
                                 java.util.Date end = sdf.parse(endTime);
                                 Calendar cal = Calendar.getInstance();
@@ -232,7 +305,7 @@
                                     <% 
                                     if (allSlots.isEmpty()) {
                                     %>
-                                        <p class="text-warning text-center"><i class="fas fa-exclamation-triangle"></i> No time slots available for this doctor.</p>
+                                        <p class="text-warning text-center"><i class="fas fa-exclamation-triangle"></i> No time slots available.</p>
                                     <% 
                                     } else {
                                         for (String slot : allSlots) {
@@ -257,7 +330,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Symptoms / Reason for Visit *</label>
                                 <textarea class="form-control" name="symptoms" rows="4" required 
-                                          placeholder="Please describe your symptoms or reason for consultation..."></textarea>
+                                          placeholder="Please describe your symptoms..."></textarea>
                             </div>
                             
                             <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" disabled>
@@ -266,7 +339,7 @@
                             <a href="userDashboard.jsp" class="btn btn-secondary btn-lg">Cancel</a>
                         </form>
                         
-                        <% } // end if selectedDate %>
+                        <% } %>
                         
                         <%
                                 }
@@ -277,7 +350,7 @@
                                 if (pstmt != null) pstmt.close();
                                 if (conn != null) conn.close();
                             }
-                        } // end if selectedDoctorId
+                        }
                         %>
                         
                     </div>
@@ -293,11 +366,12 @@
                         <h6>How it works:</h6>
                         <ol class="small">
                             <li>Select your preferred doctor</li>
-                            <li>Choose an available date</li>
+                            <li>Choose date (only available days)</li>
                             <li>Pick from available time slots</li>
                             <li class="text-danger"><strong>Booked slots are grayed out</strong></li>
                             <li>Describe your symptoms</li>
-                            <li>Complete payment to confirm</li>
+                            <li>Wait for doctor confirmation</li>
+                            <li>Pay after confirmation</li>
                         </ol>
                         <hr>
                         <div class="d-flex align-items-center mb-2">
@@ -310,7 +384,7 @@
                         </div>
                         <hr>
                         <p class="small text-muted mb-0">
-                            <i class="fas fa-shield-alt text-success"></i> Your appointment will be confirmed after payment
+                            <i class="fas fa-shield-alt text-success"></i> Payment required only after doctor confirms
                         </p>
                     </div>
                 </div>
@@ -320,23 +394,45 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Restrict date selection to doctor's available days
+        const dateInput = document.getElementById('dateInput');
+        const dateWarning = document.getElementById('dateWarning');
+        
+        if (dateInput) {
+            const availableDaysString = document.getElementById('doctorAvailableDays')?.value || '';
+            const availableDays = availableDaysString.split(',').map(d => d.trim().toLowerCase());
+            
+            // Map short names to day numbers (0 = Sunday, 1 = Monday, etc.)
+            const dayMap = {
+                'sun': 0, 'mon': 1, 'tue': 2, 'wed': 3,
+                'thu': 4, 'fri': 5, 'sat': 6
+            };
+            
+            const availableDayNumbers = availableDays.map(day => dayMap[day]).filter(num => num !== undefined);
+            
+            dateInput.addEventListener('change', function() {
+                const selectedDate = new Date(this.value + 'T00:00:00');
+                const selectedDayNumber = selectedDate.getDay();
+                
+                if (!availableDayNumbers.includes(selectedDayNumber)) {
+                    dateWarning.style.display = 'block';
+                    this.setCustomValidity('Doctor not available on this day');
+                } else {
+                    dateWarning.style.display = 'none';
+                    this.setCustomValidity('');
+                }
+            });
+        }
+        
         function selectSlot(btn, time) {
-            // Remove selected class from all buttons
             document.querySelectorAll('.time-slot-btn').forEach(b => {
                 b.classList.remove('selected');
             });
-            
-            // Add selected class to clicked button
             btn.classList.add('selected');
-            
-            // Set hidden input value
             document.getElementById('selectedTime').value = time;
-            
-            // Enable submit button
             document.getElementById('submitBtn').disabled = false;
         }
         
-        // Form validation
         document.getElementById('bookingForm')?.addEventListener('submit', function(e) {
             if (!document.getElementById('selectedTime').value) {
                 e.preventDefault();

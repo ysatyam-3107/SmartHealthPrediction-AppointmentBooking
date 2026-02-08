@@ -238,7 +238,6 @@
                 <form action="UpdateDoctorProfileServlet" method="post">
                     <div class="modal-body">
                         <%
-                            // Fetch data again for edit form
                             conn = null;
                             pstmt = null;
                             rs = null;
@@ -249,6 +248,12 @@
                                 pstmt.setInt(1, doctorId);
                                 rs = pstmt.executeQuery();
                                 if (rs.next()) {
+                                    String currentDays = rs.getString("available_days");
+                                    String[] selectedDaysArray = currentDays != null ? currentDays.split(",\\s*") : new String[0];
+                                    java.util.Set<String> selectedDaysSet = new java.util.HashSet<>();
+                                    for (String day : selectedDaysArray) {
+                                        selectedDaysSet.add(day.trim().toLowerCase());
+                                    }
                         %>
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -279,11 +284,63 @@
                                 <label class="form-label">Consultation Fee (₹) *</label>
                                 <input type="number" class="form-control" name="consultationFee" value="<%= rs.getDouble("consultation_fee") %>" step="0.01" required>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Available Days *</label>
-                                <input type="text" class="form-control" name="availableDays" value="<%= rs.getString("available_days") %>" required>
+                        </div>
+                        
+                        <hr>
+                        <h6 class="text-success mb-3">Availability Schedule</h6>
+                        
+                        <div class="mb-3">
+                            <label class="form-label d-block">Available Days *</label>
+                            <div class="row">
+                                <div class="col-md-3 col-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input available-day-check" type="checkbox" name="availableDays" value="Monday" id="edit_mon" <%= selectedDaysSet.contains("mon") ? "checked" : "" %>>
+                                        <label class="form-check-label" for="edit_mon">Monday</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input available-day-check" type="checkbox" name="availableDays" value="Tuesday" id="edit_tue" <%= selectedDaysSet.contains("tue") ? "checked" : "" %>>
+                                        <label class="form-check-label" for="edit_tue">Tuesday</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input available-day-check" type="checkbox" name="availableDays" value="Wednesday" id="edit_wed" <%= selectedDaysSet.contains("wed") ? "checked" : "" %>>
+                                        <label class="form-check-label" for="edit_wed">Wednesday</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input available-day-check" type="checkbox" name="availableDays" value="Thursday" id="edit_thu" <%= selectedDaysSet.contains("thu") ? "checked" : "" %>>
+                                        <label class="form-check-label" for="edit_thu">Thursday</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input available-day-check" type="checkbox" name="availableDays" value="Friday" id="edit_fri" <%= selectedDaysSet.contains("fri") ? "checked" : "" %>>
+                                        <label class="form-check-label" for="edit_fri">Friday</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input available-day-check" type="checkbox" name="availableDays" value="Saturday" id="edit_sat" <%= selectedDaysSet.contains("sat") ? "checked" : "" %>>
+                                        <label class="form-check-label" for="edit_sat">Saturday</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input available-day-check" type="checkbox" name="availableDays" value="Sunday" id="edit_sun" <%= selectedDaysSet.contains("sun") ? "checked" : "" %>>
+                                        <label class="form-check-label" for="edit_sun">Sunday</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="availableDaysString" id="editAvailableDaysString">
+                            <div class="alert alert-info mt-2 p-2" id="editSelectedDaysDisplay">
+                                <small><strong>Selected:</strong> <%= currentDays %></small>
                             </div>
                         </div>
+                        
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Start Time *</label>
@@ -388,6 +445,39 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Handle day selection in edit modal
+        const dayCheckboxes = document.querySelectorAll('.available-day-check');
+        const selectedDaysDisplay = document.getElementById('editSelectedDaysDisplay');
+        const availableDaysString = document.getElementById('editAvailableDaysString');
+
+        function updateSelectedDays() {
+            const selected = [];
+            dayCheckboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selected.push(checkbox.value);
+                }
+            });
+
+            if (selected.length > 0) {
+                const shortNames = selected.map(day => day.substring(0, 3));
+                selectedDaysDisplay.innerHTML = '<small><strong>Selected:</strong> <span class="badge bg-success me-1">' + 
+                    shortNames.join('</span> <span class="badge bg-success me-1">') + '</span></small>';
+                availableDaysString.value = shortNames.join(', ');
+            } else {
+                selectedDaysDisplay.innerHTML = '<small><em class="text-danger">No days selected</em></small>';
+                availableDaysString.value = '';
+            }
+        }
+
+        dayCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateSelectedDays);
+        });
+
+        // Initialize on modal open
+        document.getElementById('editProfileModal').addEventListener('show.bs.modal', function() {
+            updateSelectedDays();
+        });
+
         function previewNewPhoto(event) {
             const file = event.target.files[0];
             if (file) {

@@ -34,7 +34,10 @@ public class UpdateDoctorProfileServlet extends HttpServlet {
         String location = request.getParameter("location");
         String experience = request.getParameter("experience");
         String consultationFee = request.getParameter("consultationFee");
-        String availableDays = request.getParameter("availableDays");
+        
+        // Get available days from hidden field (comma-separated: "Mon, Wed, Fri")
+        String availableDays = request.getParameter("availableDaysString");
+        
         String startTime = request.getParameter("startTime");
         String endTime = request.getParameter("endTime");
         String slotDuration = request.getParameter("slotDuration");
@@ -42,8 +45,9 @@ public class UpdateDoctorProfileServlet extends HttpServlet {
         // Validate inputs
         if (fullName == null || phone == null || hospitalName == null || 
             location == null || experience == null || consultationFee == null ||
-            availableDays == null || startTime == null || endTime == null || slotDuration == null) {
-            response.sendRedirect("doctorProfile.jsp?error=All fields are required!");
+            availableDays == null || availableDays.trim().isEmpty() ||
+            startTime == null || endTime == null || slotDuration == null) {
+            response.sendRedirect("doctorProfile.jsp?error=All fields are required! Please select at least one available day.");
             return;
         }
         
@@ -97,11 +101,3 @@ public class UpdateDoctorProfileServlet extends HttpServlet {
         }
     }
 }
-
-
-
-
-
-
-
-

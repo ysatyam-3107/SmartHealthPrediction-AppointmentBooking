@@ -83,7 +83,7 @@
                                     <label class="form-label fw-bold">Full Name *</label>
                                     <div class="input-group">
                                         <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                        <input type="text" class="form-control" name="fullName" required>
+                                        <input type="text" class="form-control" name="fullName" required >
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">

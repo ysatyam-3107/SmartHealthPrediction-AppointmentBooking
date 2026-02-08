@@ -35,12 +35,31 @@ public class DoctorRegisterServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String specialization = request.getParameter("specialization");
         String qualification = request.getParameter("qualification");
-        String hospitalName = request.getParameter("hospitalName");      // ✅ ADDED
-        String location = request.getParameter("location");              // ✅ ADDED
+        String hospitalName = request.getParameter("hospitalName");
+        String location = request.getParameter("location");
         String experience = request.getParameter("experience");
         String consultationFee = request.getParameter("consultationFee");
-        String availableDays = request.getParameter("availableDays");
-        String availableTime = request.getParameter("availableTime");
+        
+        // ✅ NEW: Get available days from hidden field (comma-separated: "Mon, Wed, Fri")
+        String availableDays = request.getParameter("availableDaysString");
+        
+        // Validate available days
+        if (availableDays == null || availableDays.trim().isEmpty()) {
+            response.sendRedirect("doctorRegister.jsp?error=Please select at least one available day");
+            return;
+        }
+        
+        // ✅ NEW: Get time slot settings
+        String startTime = request.getParameter("startTime");
+        String endTime = request.getParameter("endTime");
+        String slotDuration = request.getParameter("slotDuration");
+        
+        // Validate time settings
+        if (startTime == null || endTime == null || slotDuration == null ||
+            startTime.trim().isEmpty() || endTime.trim().isEmpty() || slotDuration.trim().isEmpty()) {
+            response.sendRedirect("doctorRegister.jsp?error=Please provide complete time slot information");
+            return;
+        }
         
         // Handle file upload
         Part filePart = request.getPart("profilePhoto");
@@ -80,11 +99,12 @@ public class DoctorRegisterServlet extends HttpServlet {
         try {
             conn = DBConnection.getConnection();
             
-            // ✅ FIXED SQL - Added hospital_name and location
+            // ✅ UPDATED SQL - Added start_time, end_time, slot_duration
             String sql = "INSERT INTO doctors (full_name, email, password, phone, " +
                         "specialization, qualification, hospital_name, location, " +
-                        "experience, consultation_fee, available_days, available_time, profile_photo) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        "experience, consultation_fee, available_days, " +
+                        "start_time, end_time, slot_duration, profile_photo, status) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved')";
             
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, fullName);
@@ -93,13 +113,15 @@ public class DoctorRegisterServlet extends HttpServlet {
             pstmt.setString(4, phone);
             pstmt.setString(5, specialization);
             pstmt.setString(6, qualification);
-            pstmt.setString(7, hospitalName);           // ✅ ADDED
-            pstmt.setString(8, location);               // ✅ ADDED
+            pstmt.setString(7, hospitalName);
+            pstmt.setString(8, location);
             pstmt.setInt(9, Integer.parseInt(experience));
             pstmt.setDouble(10, Double.parseDouble(consultationFee));
-            pstmt.setString(11, availableDays);
-            pstmt.setString(12, availableTime);
-            pstmt.setString(13, photoPath);
+            pstmt.setString(11, availableDays);        // "Mon, Wed, Fri"
+            pstmt.setString(12, startTime);            // ✅ NEW: "09:00"
+            pstmt.setString(13, endTime);              // ✅ NEW: "17:00"
+            pstmt.setInt(14, Integer.parseInt(slotDuration)); // ✅ NEW: 30
+            pstmt.setString(15, photoPath);
             
             int rowsInserted = pstmt.executeUpdate();
             
@@ -118,7 +140,7 @@ public class DoctorRegisterServlet extends HttpServlet {
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            response.sendRedirect("doctorRegister.jsp?error=Invalid number format for experience or consultation fee.");
+            response.sendRedirect("doctorRegister.jsp?error=Invalid number format for experience, consultation fee, or slot duration.");
         } finally {
             try {
                 if (pstmt != null) pstmt.close();

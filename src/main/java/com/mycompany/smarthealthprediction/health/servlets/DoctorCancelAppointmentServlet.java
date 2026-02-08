@@ -75,8 +75,6 @@ public class DoctorCancelAppointmentServlet extends HttpServlet {
                 return;
             }
             
-            // Update appointment status to Cancelled
-            // This will FREE UP the time slot for other patients
             String updateSql = "UPDATE appointments SET status = 'Cancelled' WHERE appointment_id = ?";
             updatePstmt = conn.prepareStatement(updateSql);
             updatePstmt.setInt(1, Integer.parseInt(appointmentId));
@@ -84,8 +82,6 @@ public class DoctorCancelAppointmentServlet extends HttpServlet {
             int rowsUpdated = updatePstmt.executeUpdate();
             
             if (rowsUpdated > 0) {
-                // Optional: Log cancellation reason if your appointments table has a cancellation_reason column
-                // Uncomment if you have this column:
                 /*
                 if (reason != null && !reason.trim().isEmpty()) {
                     String noteSql = "UPDATE appointments SET cancellation_reason = ?, cancelled_by = 'doctor' WHERE appointment_id = ?";
