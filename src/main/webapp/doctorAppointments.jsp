@@ -32,6 +32,11 @@
                         <a class="nav-link active" href="doctorAppointments.jsp">My Appointments</a>
                     </li>
                     <li class="nav-item">
+    <a class="nav-link" href="doctorReports.jsp">
+        <i class="fas fa-chart-bar"></i> Reports
+    </a>
+</li>
+                    <li class="nav-item">
                         <a class="nav-link" href="LogoutServlet">Logout</a>
                     </li>
                 </ul>

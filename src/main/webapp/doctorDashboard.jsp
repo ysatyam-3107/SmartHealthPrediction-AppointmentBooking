@@ -47,6 +47,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="doctorAppointments.jsp">My Appointments</a>
                     </li>
+                    <li class="nav-item">
+                         <a class="nav-link" href="doctorReports.jsp">
+                         <i class="fas fa-chart-bar"></i> Reports
+                            </a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user-md"></i> Dr. <%= doctorName %>
