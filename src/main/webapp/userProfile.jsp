@@ -24,6 +24,31 @@
             border: 5px solid #0d6efd;
             transition: all 0.3s ease;
         }
+        /* CSS Initials Avatar - replaces broken ui-avatars.com */
+.profile-avatar-initials {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid #0d6efd;
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    color: white;
+    font-size: 3rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    letter-spacing: 2px;
+    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    user-select: none;
+}
+
+.profile-photo-container:hover .profile-avatar-initials {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
         .profile-photo-container {
             position: relative;
             display: inline-block;
@@ -177,21 +202,56 @@
             <div class="col-md-4">
                 <div class="card shadow border-0 text-center">
                     <div class="card-body p-4">
-                        <div class="profile-photo-container mb-3" onclick="document.getElementById('photoInput').click()">
-                            <div class="upload-hint">
-                                <i class="fas fa-camera"></i> Click to change photo
-                            </div>
-                            <% if (profilePhoto != null && !profilePhoto.isEmpty()) { %>
-                                <img src="<%= profilePhoto %>" alt="Profile" class="profile-avatar" id="profileImage">
-                            <% } else { %>
-                                <img src="https://ui-avatars.com/api/?name=<%= fullName %>&size=150&background=0d6efd&color=fff&bold=true" 
-                                     alt="Profile" class="profile-avatar" id="profileImage">
-                            <% } %>
-                            <div class="photo-upload-overlay" title="Change profile photo">
-                                <i class="fas fa-camera fa-lg"></i>
-                            </div>
-                        </div>
-                        
+<!-- NEW - CSS avatar, no external API needed -->
+<div class="profile-photo-container mb-3" onclick="document.getElementById('photoInput').click()">
+    <div class="upload-hint">
+        <i class="fas fa-camera"></i> Click to change photo
+    </div>
+
+    <% if (profilePhoto != null && !profilePhoto.isEmpty()) { %>
+        <%-- User has uploaded a photo - show it --%>
+        <img src="<%= profilePhoto %>" 
+             alt="Profile" 
+             class="profile-avatar" 
+             id="profileImage"
+             onerror="this.style.display='none'; document.getElementById('avatarFallback').style.display='flex';">
+        
+        <%-- Hidden fallback in case image fails to load --%>
+        <%
+            String initials = "";
+            String[] nameParts = fullName.trim().split("\\s+");
+            if (nameParts.length >= 2) {
+                initials = String.valueOf(nameParts[0].charAt(0)).toUpperCase() + 
+                           String.valueOf(nameParts[nameParts.length - 1].charAt(0)).toUpperCase();
+            } else if (nameParts.length == 1) {
+                initials = String.valueOf(nameParts[0].charAt(0)).toUpperCase();
+            }
+        %>
+        <div id="avatarFallback" class="profile-avatar-initials" style="display:none;">
+            <%= initials %>
+        </div>
+
+    <% } else { %>
+        <%-- No photo - show initials avatar --%>
+        <%
+            String initials = "";
+            String[] nameParts = fullName.trim().split("\\s+");
+            if (nameParts.length >= 2) {
+                initials = String.valueOf(nameParts[0].charAt(0)).toUpperCase() + 
+                           String.valueOf(nameParts[nameParts.length - 1].charAt(0)).toUpperCase();
+            } else if (nameParts.length == 1) {
+                initials = String.valueOf(nameParts[0].charAt(0)).toUpperCase();
+            }
+        %>
+        <div class="profile-avatar-initials" id="profileImage">
+            <%= initials %>
+        </div>
+    <% } %>
+
+    <div class="photo-upload-overlay" title="Change profile photo">
+        <i class="fas fa-camera fa-lg"></i>
+    </div>
+</div>                        
                         <!-- Hidden form for photo upload -->
                         <form action="UpdatePhotoServlet" method="post" enctype="multipart/form-data" id="photoForm">
                             <input type="file" 

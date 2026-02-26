@@ -126,6 +126,103 @@ footer {
     from { opacity: 0; transform: translateY(40px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* ---------- MODAL ---------- */
+.modal-content {
+    border: none;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 28px 32px 20px;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+    opacity: 0.8;
+}
+
+.modal-body {
+    padding: 36px 32px 40px;
+    background: #fafbff;
+}
+
+.role-card {
+    border: 2.5px solid #e0e4f0;
+    border-radius: 20px;
+    padding: 28px 16px;
+    text-align: center;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.35s ease;
+    background: white;
+}
+
+.role-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+    color: inherit;
+}
+
+.role-card.patient:hover { border-color: #667eea; }
+.role-card.doctor:hover  { border-color: #11998e; }
+
+.role-icon-wrap {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 14px;
+    font-size: 1.8rem;
+    transition: transform 0.3s;
+}
+
+.role-card:hover .role-icon-wrap {
+    transform: scale(1.15) rotate(-5deg);
+}
+
+.patient .role-icon-wrap { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+.doctor  .role-icon-wrap { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; }
+
+.role-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+    color: #1a1a2e;
+}
+
+.role-desc {
+    font-size: 0.8rem;
+    color: #888;
+    line-height: 1.5;
+}
+
+.role-badge {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 14px;
+    border-radius: 30px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.patient .role-badge { background: #eef0ff; color: #667eea; }
+.doctor  .role-badge { background: #e6faf2; color: #11998e; }
+
+.login-links a {
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login-links a:hover { text-decoration: underline; }
 </style>
 </head>
 
@@ -170,15 +267,16 @@ footer {
 <div class="hero-section text-center">
     <div class="container">
         <h1 class="display-4 fw-bold mb-4">
-            Smart Health Prediction & Appointment System
+            Smart Health Prediction &amp; Appointment System
         </h1>
         <p class="lead mb-5">
-            Your Health, Our Priority – AI Powered Predictions & Easy Appointments
+            Your Health, Our Priority - AI Powered Predictions &amp; Easy Appointments
         </p>
 
-       <button class="btn btn-light btn-lg me-3" data-bs-toggle="modal" data-bs-target="GetStartedmodal">
-    <i class="fas fa-user-plus"></i> Get Started
-</button>
+        <!-- ✅ FIXED: added # before getStartedModal -->
+        <button type="button" class="btn btn-light btn-lg me-3" data-bs-toggle="modal" data-bs-target="#getStartedModal">
+            <i class="fas fa-user-plus"></i> Get Started
+        </button>
 
         <a href="userLogin.jsp" class="btn btn-outline-light btn-lg">
             <i class="fas fa-sign-in-alt"></i> Login
@@ -227,6 +325,69 @@ footer {
 <footer class="text-white text-center py-4">
     &copy; 2025 Smart Health System | All Rights Reserved
 </footer>
+
+
+<!-- ✅ GET STARTED MODAL (must be inside index.jsp to work) -->
+<div class="modal fade" id="getStartedModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">
+                    <i class="fas fa-heartbeat me-2"></i> Welcome to Smart Health
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p class="text-center text-muted mb-4">How would you like to continue?</p>
+
+                <div class="row g-3">
+
+                    <!-- Patient Card -->
+                    <div class="col-6">
+                        <a href="userRegister.jsp" class="role-card patient">
+                            <div class="role-icon-wrap">
+                                <i class="fas fa-user-injured"></i>
+                            </div>
+                            <div class="role-title">Patient</div>
+                            <div class="role-desc">Book appointments &amp; get AI health predictions</div>
+                            <span class="role-badge">Register &rarr;</span>
+                        </a>
+                    </div>
+
+                    <!-- Doctor Card -->
+                    <div class="col-6">
+                        <a href="doctorRegister.jsp" class="role-card doctor">
+                            <div class="role-icon-wrap">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <div class="role-title">Doctor</div>
+                            <div class="role-desc">Manage patients &amp; handle appointments</div>
+                            <span class="role-badge">Register &rarr;</span>
+                        </a>
+                    </div>
+
+                </div>
+
+                <!-- Already have account -->
+                <hr class="my-3">
+                <p class="text-center text-muted mb-2" style="font-size:0.83rem;">Already have an account?</p>
+                <div class="text-center login-links" style="font-size:0.83rem;">
+                    <a href="userLogin.jsp" style="color:#667eea;">
+                        <i class="fas fa-user me-1"></i>Patient Login
+                    </a>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="doctorLogin.jsp" style="color:#11998e;">
+                        <i class="fas fa-stethoscope me-1"></i>Doctor Login
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
