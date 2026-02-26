@@ -176,9 +176,9 @@ footer {
             Your Health, Our Priority – AI Powered Predictions & Easy Appointments
         </p>
 
-        <a href="userRegister.jsp" class="btn btn-light btn-lg me-3">
-            <i class="fas fa-user-plus"></i> Get Started
-        </a>
+       <button class="btn btn-light btn-lg me-3" data-bs-toggle="modal" data-bs-target="GetStartedmodal">
+    <i class="fas fa-user-plus"></i> Get Started
+</button>
 
         <a href="userLogin.jsp" class="btn btn-outline-light btn-lg">
             <i class="fas fa-sign-in-alt"></i> Login
