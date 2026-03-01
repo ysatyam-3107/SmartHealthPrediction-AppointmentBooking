@@ -99,15 +99,37 @@
             <div class="col-md-4">
                 <div class="card shadow border-0 mb-4">
                     <div class="card-body text-center">
-                        <% 
-                            String photoPath = rs.getString("profile_photo");
-                            if (photoPath != null && !photoPath.isEmpty()) {
-                        %>
-                            <img src="<%= photoPath %>" alt="Doctor Photo" class="profile-photo mb-3">
-                        <% } else { %>
-                            <img src="https://ui-avatars.com/api/?name=<%= rs.getString("full_name") %>&size=150&background=198754&color=fff" 
-                                 alt="Doctor Photo" class="profile-photo mb-3">
-                        <% } %>
+                       <%
+    String photoPath = rs.getString("profile_photo");
+    String drName = rs.getString("full_name");
+    String drInitials = "";
+    String[] drParts = drName.trim().split("\\s+");
+    if (drParts.length >= 2) {
+        drInitials = String.valueOf(drParts[0].charAt(0)).toUpperCase() +
+                     String.valueOf(drParts[drParts.length - 1].charAt(0)).toUpperCase();
+    } else {
+        drInitials = String.valueOf(drParts[0].charAt(0)).toUpperCase();
+    }
+    if (photoPath != null && !photoPath.isEmpty()) {
+%>
+    <img src="<%= photoPath %>" alt="Doctor Photo" class="profile-photo mb-3"
+         onerror="this.style.display='none'; document.getElementById('drAvatarFb').style.display='flex';">
+    <div id="drAvatarFb" style="display:none; width:150px; height:150px; border-radius:50%;
+         background:linear-gradient(135deg,#198754,#20c997); color:white;
+         font-size:3rem; font-weight:700; align-items:center; justify-content:center;
+         border:5px solid #198754; margin:0 auto 12px;
+         box-shadow:0 6px 20px rgba(25,135,84,0.4);">
+        <%= drInitials %>
+    </div>
+<% } else { %>
+    <div style="width:150px; height:150px; border-radius:50%;
+         background:linear-gradient(135deg,#198754,#20c997); color:white;
+         font-size:3rem; font-weight:700; display:flex; align-items:center; justify-content:center;
+         border:5px solid #198754; margin:0 auto 12px;
+         box-shadow:0 6px 20px rgba(25,135,84,0.4);">
+        <%= drInitials %>
+    </div>
+<% } %>
                         <h4 class="mb-1">Dr. <%= rs.getString("full_name") %></h4>
                         <p class="text-muted mb-2"><%= rs.getString("specialization") %></p>
                         <p class="text-success"><i class="fas fa-graduation-cap"></i> <%= rs.getString("qualification") %></p>

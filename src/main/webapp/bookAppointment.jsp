@@ -158,16 +158,43 @@
                             <div class="card-body">
                                 <div class="row align-items-center">
                                     <div class="col-md-3 text-center">
-                                        <% if (photoPath != null && !photoPath.isEmpty()) { %>
-                                            <img src="<%= photoPath %>" alt="Dr. <%= rs.getString("full_name") %>" 
-                                                 class="rounded-circle shadow" 
-                                                 style="width: 100px; height: 100px; object-fit: cover; border: 4px solid #fff;">
-                                        <% } else { %>
-                                            <img src="https://ui-avatars.com/api/?name=<%= rs.getString("full_name") %>&size=100&background=0d6efd&color=fff&bold=true" 
-                                                 alt="Dr. <%= rs.getString("full_name") %>" 
-                                                 class="rounded-circle shadow" 
-                                                 style="width: 100px; height: 100px; object-fit: cover; border: 4px solid #fff;">
-                                        <% } %>
+                                       <!-- ✅ NEW - CSS initials avatar, no external API -->
+<%
+    String drFullName = rs.getString("full_name");
+    String drInitials = "";
+    String[] drParts = drFullName.trim().split("\\s+");
+    if (drParts.length >= 2) {
+        drInitials = String.valueOf(drParts[0].charAt(0)).toUpperCase() +
+                     String.valueOf(drParts[drParts.length - 1].charAt(0)).toUpperCase();
+    } else {
+        drInitials = String.valueOf(drParts[0].charAt(0)).toUpperCase();
+    }
+%>
+<% if (photoPath != null && !photoPath.isEmpty()) { %>
+    <img src="<%= photoPath %>"
+         alt="Dr. <%= drFullName %>"
+         class="rounded-circle shadow"
+         style="width:100px; height:100px; object-fit:cover; border:4px solid #fff;"
+         onerror="this.style.display='none'; document.getElementById('drAvatarFallback').style.display='flex';">
+    <div id="drAvatarFallback"
+         style="display:none; width:100px; height:100px; border-radius:50%;
+                background:linear-gradient(135deg,#0d6efd,#6610f2);
+                color:white; font-size:2rem; font-weight:700;
+                align-items:center; justify-content:center;
+                border:4px solid #fff; margin:0 auto;
+                box-shadow:0 4px 15px rgba(13,110,253,0.4);">
+        <%= drInitials %>
+    </div>
+<% } else { %>
+    <div style="width:100px; height:100px; border-radius:50%;
+                background:linear-gradient(135deg,#0d6efd,#6610f2);
+                color:white; font-size:2rem; font-weight:700;
+                display:flex; align-items:center; justify-content:center;
+                border:4px solid #fff; margin:0 auto;
+                box-shadow:0 4px 15px rgba(13,110,253,0.4);">
+        <%= drInitials %>
+    </div>
+<% } %>
                                         <p class="mt-2 mb-0 fw-bold text-primary">Dr. <%= rs.getString("full_name") %></p>
                                         <small class="text-muted"><%= rs.getString("specialization") %></small>
                                     </div>
