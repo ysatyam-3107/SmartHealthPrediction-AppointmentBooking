@@ -237,7 +237,7 @@
                                                     <span class="badge <%= badgeClass %>"><%= status %></span>
                                                 </div>
                                                 <div class="col-md-1">
-                                                    <a href="viewAppointment.jsp?id=<%= rs.getInt("appointment_id") %>" 
+                                                    <a href="doctorAppointments.jsp?id=<%= rs.getInt("appointment_id") %>" 
                                                        class="btn btn-sm btn-outline-success">
                                                         <i class="fas fa-eye"></i>
                                                     </a>

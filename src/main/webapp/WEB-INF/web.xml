@@ -1,45 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="5.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee           https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
-    <!-- User Servlets -->
+    <!-- ===== USER SERVLETS ===== -->
     <servlet>
         <servlet-name>UserRegisterServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UserRegisterServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>UpdateProfileServlet</servlet-name>
-        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UpdateProfileServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ChangePasswordServlet</servlet-name>
-        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.ChangePasswordServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>updatePhoto</servlet-name>
-        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.updatePhoto</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>NewServlet</servlet-name>
-        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.NewServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>Getavailabletimeslotsservlet</servlet-name>
-        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.Getavailabletimeslotsservlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>Doctorcancelappointmentservlet</servlet-name>
-        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.Doctorcancelappointmentservlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UpdateDoctorProfileServlet</servlet-name>
-        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UpdateDoctorProfileServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UpdateDoctorPhotoServlet</servlet-name>
-        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UpdateDoctorPhotoServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ChangeDoctorPasswordServlet</servlet-name>
-        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.ChangeDoctorPasswordServlet</servlet-class>
+        <servlet-name>FileServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.FileServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserRegisterServlet</servlet-name>
@@ -53,7 +21,31 @@
         <servlet-name>UserLoginServlet</servlet-name>
         <url-pattern>/UserLoginServlet</url-pattern>
     </servlet-mapping>
-    <!-- Doctor Servlets -->
+    <servlet>
+        <servlet-name>UpdateProfileServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UpdateProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateProfileServlet</servlet-name>
+        <url-pattern>/UpdateProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.ChangePasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChangePasswordServlet</servlet-name>
+        <url-pattern>/ChangePasswordServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>updatePhoto</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.updatePhoto</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>updatePhoto</servlet-name>
+        <url-pattern>/updatePhoto</url-pattern>
+    </servlet-mapping>
+    <!-- ===== DOCTOR SERVLETS ===== -->
     <servlet>
         <servlet-name>DoctorRegisterServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.DoctorRegisterServlet</servlet-class>
@@ -70,7 +62,39 @@
         <servlet-name>DoctorLoginServlet</servlet-name>
         <url-pattern>/DoctorLoginServlet</url-pattern>
     </servlet-mapping>
-    <!-- Appointment Servlets -->
+    <servlet>
+        <servlet-name>UpdateDoctorProfileServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UpdateDoctorProfileServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateDoctorProfileServlet</servlet-name>
+        <url-pattern>/UpdateDoctorProfileServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UpdateDoctorPhotoServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UpdateDoctorPhotoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UpdateDoctorPhotoServlet</servlet-name>
+        <url-pattern>/UpdateDoctorPhotoServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>ChangeDoctorPasswordServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.ChangeDoctorPasswordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ChangeDoctorPasswordServlet</servlet-name>
+        <url-pattern>/ChangeDoctorPasswordServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Doctorcancelappointmentservlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.Doctorcancelappointmentservlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Doctorcancelappointmentservlet</servlet-name>
+        <url-pattern>/Doctorcancelappointmentservlet</url-pattern>
+    </servlet-mapping>
+    <!-- ===== APPOINTMENT SERVLETS ===== -->
     <servlet>
         <servlet-name>BookAppointmentServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.BookAppointmentServlet</servlet-class>
@@ -95,7 +119,15 @@
         <servlet-name>CancelAppointmentServlet</servlet-name>
         <url-pattern>/CancelAppointmentServlet</url-pattern>
     </servlet-mapping>
-    <!-- Prediction Servlet -->
+    <servlet>
+        <servlet-name>Getavailabletimeslotsservlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.Getavailabletimeslotsservlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Getavailabletimeslotsservlet</servlet-name>
+        <url-pattern>/Getavailabletimeslotsservlet</url-pattern>
+    </servlet-mapping>
+    <!-- ===== OTHER SERVLETS ===== -->
     <servlet>
         <servlet-name>DiseasePredictionServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.DiseasePredictionServlet</servlet-class>
@@ -104,7 +136,6 @@
         <servlet-name>DiseasePredictionServlet</servlet-name>
         <url-pattern>/DiseasePredictionServlet</url-pattern>
     </servlet-mapping>
-    <!-- Payment Servlet -->
     <servlet>
         <servlet-name>PaymentServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.PaymentServlet</servlet-class>
@@ -113,7 +144,6 @@
         <servlet-name>PaymentServlet</servlet-name>
         <url-pattern>/PaymentServlet</url-pattern>
     </servlet-mapping>
-    <!-- Logout Servlet -->
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.LogoutServlet</servlet-class>
@@ -122,46 +152,23 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/LogoutServlet</url-pattern>
     </servlet-mapping>
-    <!-- Welcome File -->
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
-    <!-- Session Configuration -->
-    <servlet-mapping>
-        <servlet-name>UpdateProfileServlet</servlet-name>
-        <url-pattern>/UpdateProfileServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ChangePasswordServlet</servlet-name>
-        <url-pattern>/ChangePasswordServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>updatePhoto</servlet-name>
-        <url-pattern>/updatePhoto</url-pattern>
-    </servlet-mapping>
+    <servlet>
+        <servlet-name>NewServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.NewServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>NewServlet</servlet-name>
         <url-pattern>/NewServlet</url-pattern>
     </servlet-mapping>
+    <!-- NOTE: Photo serving is handled via context.xml DirResourceSet, not here -->
+    <!-- ===== WELCOME FILE ===== -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    <!-- ===== SESSION TIMEOUT (30 mins) ===== -->
     <servlet-mapping>
-        <servlet-name>Getavailabletimeslotsservlet</servlet-name>
-        <url-pattern>/Getavailabletimeslotsservlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Doctorcancelappointmentservlet</servlet-name>
-        <url-pattern>/Doctorcancelappointmentservlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>UpdateDoctorProfileServlet</servlet-name>
-        <url-pattern>/UpdateDoctorProfileServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>UpdateDoctorPhotoServlet</servlet-name>
-        <url-pattern>/UpdateDoctorPhotoServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ChangeDoctorPasswordServlet</servlet-name>
-        <url-pattern>/ChangeDoctorPasswordServlet</url-pattern>
+        <servlet-name>FileServlet</servlet-name>
+        <url-pattern>/FileServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
