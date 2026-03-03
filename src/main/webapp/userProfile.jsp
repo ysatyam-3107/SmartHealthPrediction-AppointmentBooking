@@ -274,6 +274,9 @@
                             <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
                                 <i class="fas fa-lock"></i> Change Password
                             </button>
+                            <button class="btn btn-danger btn-sm mt-1 w-100" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                                <i class="fas fa-user-times"></i> Delete Account
+                            </button>
                             <% if (profilePhoto != null && !profilePhoto.isEmpty()) { %>
                             <button class="btn btn-outline-danger btn-sm" onclick="removePhoto()">
                                 <i class="fas fa-trash"></i> Remove Photo
@@ -596,6 +599,46 @@
         %>
     </div>
 
+
+        <!-- Delete Account Modal -->
+        <div class="modal fade" id="deleteAccountModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0" style="border-radius:16px; overflow:hidden;">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title">
+                            <i class="fas fa-exclamation-triangle me-2"></i> Delete Account
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="alert alert-warning mb-3">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            <strong>Your data will be kept safe.</strong><br>
+                            <small>Your appointment history and records are retained for medical purposes.</small>
+                        </div>
+                        <p class="text-muted mb-3">Enter your password to confirm account deletion:</p>
+                        <form action="DeleteAccountServlet" method="post">
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" name="confirmPassword"
+                                           id="deleteConfirmPassword" placeholder="Enter your password" required>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="toggleDeletePassword()">
+                                        <i class="fas fa-eye" id="deleteEyeIcon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash me-2"></i> Yes, Delete My Account
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function validateAndSubmitPhoto(event) {
@@ -626,6 +669,18 @@
         function removePhoto() {
             if (confirm('Are you sure you want to remove your profile photo?')) {
                 window.location.href = 'RemovePhotoServlet';
+            }
+        }
+
+        function toggleDeletePassword() {
+            const input = document.getElementById('deleteConfirmPassword');
+            const icon  = document.getElementById('deleteEyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
             }
         }
     </script>

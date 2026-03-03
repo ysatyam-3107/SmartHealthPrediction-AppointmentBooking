@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="5.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee           https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd">
+
     <!-- ===== USER SERVLETS ===== -->
     <servlet>
         <servlet-name>UserRegisterServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UserRegisterServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>FileServlet</servlet-name>
-        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.FileServlet</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>UserRegisterServlet</servlet-name>
         <url-pattern>/UserRegisterServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UserLoginServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UserLoginServlet</servlet-class>
@@ -21,6 +19,7 @@
         <servlet-name>UserLoginServlet</servlet-name>
         <url-pattern>/UserLoginServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UpdateProfileServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UpdateProfileServlet</servlet-class>
@@ -29,6 +28,7 @@
         <servlet-name>UpdateProfileServlet</servlet-name>
         <url-pattern>/UpdateProfileServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>ChangePasswordServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.ChangePasswordServlet</servlet-class>
@@ -37,6 +37,7 @@
         <servlet-name>ChangePasswordServlet</servlet-name>
         <url-pattern>/ChangePasswordServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>updatePhoto</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.updatePhoto</servlet-class>
@@ -45,6 +46,7 @@
         <servlet-name>updatePhoto</servlet-name>
         <url-pattern>/updatePhoto</url-pattern>
     </servlet-mapping>
+
     <!-- ===== DOCTOR SERVLETS ===== -->
     <servlet>
         <servlet-name>DoctorRegisterServlet</servlet-name>
@@ -54,6 +56,7 @@
         <servlet-name>DoctorRegisterServlet</servlet-name>
         <url-pattern>/DoctorRegisterServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>DoctorLoginServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.DoctorLoginServlet</servlet-class>
@@ -62,6 +65,7 @@
         <servlet-name>DoctorLoginServlet</servlet-name>
         <url-pattern>/DoctorLoginServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UpdateDoctorProfileServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UpdateDoctorProfileServlet</servlet-class>
@@ -70,6 +74,7 @@
         <servlet-name>UpdateDoctorProfileServlet</servlet-name>
         <url-pattern>/UpdateDoctorProfileServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UpdateDoctorPhotoServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UpdateDoctorPhotoServlet</servlet-class>
@@ -78,6 +83,7 @@
         <servlet-name>UpdateDoctorPhotoServlet</servlet-name>
         <url-pattern>/UpdateDoctorPhotoServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>ChangeDoctorPasswordServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.ChangeDoctorPasswordServlet</servlet-class>
@@ -86,6 +92,7 @@
         <servlet-name>ChangeDoctorPasswordServlet</servlet-name>
         <url-pattern>/ChangeDoctorPasswordServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>Doctorcancelappointmentservlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.Doctorcancelappointmentservlet</servlet-class>
@@ -94,6 +101,7 @@
         <servlet-name>Doctorcancelappointmentservlet</servlet-name>
         <url-pattern>/Doctorcancelappointmentservlet</url-pattern>
     </servlet-mapping>
+
     <!-- ===== APPOINTMENT SERVLETS ===== -->
     <servlet>
         <servlet-name>BookAppointmentServlet</servlet-name>
@@ -103,6 +111,7 @@
         <servlet-name>BookAppointmentServlet</servlet-name>
         <url-pattern>/BookAppointmentServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>UpdateAppointmentServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.UpdateAppointmentServlet</servlet-class>
@@ -111,6 +120,7 @@
         <servlet-name>UpdateAppointmentServlet</servlet-name>
         <url-pattern>/UpdateAppointmentServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>CancelAppointmentServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.CancelAppointmentServlet</servlet-class>
@@ -119,6 +129,7 @@
         <servlet-name>CancelAppointmentServlet</servlet-name>
         <url-pattern>/CancelAppointmentServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>Getavailabletimeslotsservlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.Getavailabletimeslotsservlet</servlet-class>
@@ -127,6 +138,7 @@
         <servlet-name>Getavailabletimeslotsservlet</servlet-name>
         <url-pattern>/Getavailabletimeslotsservlet</url-pattern>
     </servlet-mapping>
+
     <!-- ===== OTHER SERVLETS ===== -->
     <servlet>
         <servlet-name>DiseasePredictionServlet</servlet-name>
@@ -136,6 +148,7 @@
         <servlet-name>DiseasePredictionServlet</servlet-name>
         <url-pattern>/DiseasePredictionServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>PaymentServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.PaymentServlet</servlet-class>
@@ -144,6 +157,7 @@
         <servlet-name>PaymentServlet</servlet-name>
         <url-pattern>/PaymentServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.LogoutServlet</servlet-class>
@@ -152,6 +166,7 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/LogoutServlet</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>NewServlet</servlet-name>
         <servlet-class>com.mycompany.smarthealthprediction.health.servlets.NewServlet</servlet-class>
@@ -160,17 +175,34 @@
         <servlet-name>NewServlet</servlet-name>
         <url-pattern>/NewServlet</url-pattern>
     </servlet-mapping>
-    <!-- NOTE: Photo serving is handled via context.xml DirResourceSet, not here -->
-    <!-- ===== WELCOME FILE ===== -->
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
-    <!-- ===== SESSION TIMEOUT (30 mins) ===== -->
+
+    <servlet>
+        <servlet-name>DeleteAccountServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.DeleteAccountServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteAccountServlet</servlet-name>
+        <url-pattern>/DeleteAccountServlet</url-pattern>
+    </servlet-mapping>
+
+    <!-- Serves uploaded photos from permanent C:/SmartHealthUploads folder -->
+    <servlet>
+        <servlet-name>FileServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.FileServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>FileServlet</servlet-name>
         <url-pattern>/FileServlet</url-pattern>
     </servlet-mapping>
+
+    <!-- ===== WELCOME FILE ===== -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- ===== SESSION TIMEOUT (30 mins) ===== -->
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
+
 </web-app>

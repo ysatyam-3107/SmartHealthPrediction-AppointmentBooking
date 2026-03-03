@@ -29,23 +29,37 @@ public class UserLoginServlet extends HttpServlet {
         
         try {
             conn = DBConnection.getConnection();
-            String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+            // is_deleted = 0 blocks soft-deleted accounts from logging in
+            String sql = "SELECT * FROM users WHERE email = ? AND password = ? AND is_deleted = 0";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, email);
             pstmt.setString(2, password);
-            
+
             rs = pstmt.executeQuery();
-            
+
             if (rs.next()) {
                 HttpSession session = request.getSession();
                 session.setAttribute("userId", rs.getInt("user_id"));
                 session.setAttribute("userName", rs.getString("full_name"));
                 session.setAttribute("userEmail", rs.getString("email"));
                 session.setAttribute("userType", "user");
-                
                 response.sendRedirect("userDashboard.jsp");
             } else {
-                response.sendRedirect("userLogin.jsp?error=Invalid email or password!");
+                // Check if account exists but was soft-deleted
+                PreparedStatement checkDeleted = conn.prepareStatement(
+                    "SELECT is_deleted FROM users WHERE email = ? AND password = ?"
+                );
+                checkDeleted.setString(1, email);
+                checkDeleted.setString(2, password);
+                ResultSet checkRs = checkDeleted.executeQuery();
+
+                if (checkRs.next() && checkRs.getInt("is_deleted") == 1) {
+                    response.sendRedirect("userLogin.jsp?error=This account has been deleted. Contact support to recover it.");
+                } else {
+                    response.sendRedirect("userLogin.jsp?error=Invalid email or password!");
+                }
+                checkRs.close();
+                checkDeleted.close();
             }
             
         } catch (SQLException e) {
