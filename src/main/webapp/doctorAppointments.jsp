@@ -32,10 +32,10 @@
                         <a class="nav-link active" href="doctorAppointments.jsp">My Appointments</a>
                     </li>
                     <li class="nav-item">
-    <a class="nav-link" href="doctorReports.jsp">
-        <i class="fas fa-chart-bar"></i> Reports
-    </a>
-</li>
+                        <a class="nav-link" href="doctorReports.jsp">
+                            <i class="fas fa-chart-bar"></i> Reports
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="LogoutServlet">Logout</a>
                     </li>
@@ -140,12 +140,14 @@
                                             while (rs.next()) {
                                                 hasRecords = true;
                                                 String status = rs.getString("status");
+                                                // Normalize status to handle any case variations from DB
+                                                String statusNorm = (status != null) ? status.trim() : "";
                                                 int appointmentId = rs.getInt("appointment_id");
                                                 String badgeClass = "bg-secondary";
-                                                if (status.equals("Pending")) badgeClass = "bg-warning text-dark";
-                                                else if (status.equals("Confirmed")) badgeClass = "bg-info";
-                                                else if (status.equals("Completed")) badgeClass = "bg-success";
-                                                else if (status.equals("Cancelled")) badgeClass = "bg-danger";
+                                                if (statusNorm.equalsIgnoreCase("Pending")) badgeClass = "bg-warning text-dark";
+                                                else if (statusNorm.equalsIgnoreCase("Confirmed")) badgeClass = "bg-info";
+                                                else if (statusNorm.equalsIgnoreCase("Completed")) badgeClass = "bg-success";
+                                                else if (statusNorm.equalsIgnoreCase("Cancelled")) badgeClass = "bg-danger";
                                     %>
                                                 <tr>
                                                     <td><strong>#<%= appointmentId %></strong></td>
@@ -160,7 +162,7 @@
                                                         <small><%= rs.getString("symptoms").substring(0, Math.min(30, rs.getString("symptoms").length())) %>...</small>
                                                     </td>
                                                     <td>
-                                                        <span class="badge <%= badgeClass %>"><%= status %></span>
+                                                        <span class="badge <%= badgeClass %>"><%= statusNorm %></span>
                                                     </td>
                                                     <td>
                                                         <div class="btn-group btn-group-sm" role="group">
@@ -171,7 +173,7 @@
                                                                 <i class="fas fa-eye"></i>
                                                             </a>
                                                             
-                                                            <% if (status.equals("Pending")) { %>
+                                                            <% if (statusNorm.equalsIgnoreCase("Pending")) { %>
                                                                 <!-- Confirm Button for Pending -->
                                                                 <a href="UpdateAppointmentServlet?id=<%= appointmentId %>&status=Confirmed" 
                                                                    class="btn btn-outline-success" 
@@ -186,7 +188,7 @@
                                                                    onclick="return confirm('Cancel this appointment? The patient will be notified and the time slot will be freed.');">
                                                                     <i class="fas fa-times"></i>
                                                                 </a>
-                                                            <% } else if (status.equals("Confirmed")) { %>
+                                                            <% } else if (statusNorm.equalsIgnoreCase("Confirmed")) { %>
                                                                 <!-- Complete Button for Confirmed -->
                                                                 <a href="UpdateAppointmentServlet?id=<%= appointmentId %>&status=Completed" 
                                                                    class="btn btn-outline-info" 
@@ -201,12 +203,12 @@
                                                                    onclick="return confirm('Cancel this confirmed appointment? The patient will receive a refund notification and the time slot will be freed.');">
                                                                     <i class="fas fa-ban"></i>
                                                                 </a>
-                                                            <% } else if (status.equals("Completed")) { %>
+                                                            <% } else if (statusNorm.equalsIgnoreCase("Completed")) { %>
                                                                 <!-- No action buttons for completed -->
                                                                 <button class="btn btn-outline-secondary" disabled title="Completed">
                                                                     <i class="fas fa-check-circle"></i>
                                                                 </button>
-                                                            <% } else if (status.equals("Cancelled")) { %>
+                                                            <% } else if (statusNorm.equalsIgnoreCase("Cancelled")) { %>
                                                                 <!-- No action buttons for cancelled -->
                                                                 <button class="btn btn-outline-secondary" disabled title="Cancelled">
                                                                     <i class="fas fa-ban"></i>
@@ -271,11 +273,12 @@
                                         
                                         try {
                                             conn = DBConnection.getConnection();
+                                            // Use LOWER() in SQL to handle any case stored in DB
                                             String sql = "SELECT a.appointment_id, a.appointment_date, a.appointment_time, " +
                                                        "a.symptoms, u.full_name, u.phone, u.email " +
                                                        "FROM appointments a " +
                                                        "JOIN users u ON a.user_id = u.user_id " +
-                                                       "WHERE a.doctor_id = ? AND a.status = 'Pending' " +
+                                                       "WHERE a.doctor_id = ? AND LOWER(a.status) = 'pending' " +
                                                        "ORDER BY a.appointment_date ASC, a.appointment_time ASC";
                                             pstmt = conn.prepareStatement(sql);
                                             pstmt.setInt(1, doctorId);
@@ -298,7 +301,7 @@
                                                     <td><small><%= rs.getString("symptoms").substring(0, Math.min(50, rs.getString("symptoms").length())) %>...</small></td>
                                                     <td>
                                                         <div class="btn-group btn-group-sm">
-                                                            <a href="viewAppointment.jsp?id=<%= appointmentId %>" 
+                                                            <a href="doctorViewAppointments.jsp?id=<%= appointmentId %>" 
                                                                class="btn btn-outline-primary">
                                                                 <i class="fas fa-eye"></i> View
                                                             </a>
@@ -375,7 +378,7 @@
                                                        "a.symptoms, u.full_name, u.phone, u.email " +
                                                        "FROM appointments a " +
                                                        "JOIN users u ON a.user_id = u.user_id " +
-                                                       "WHERE a.doctor_id = ? AND a.status = 'Confirmed' " +
+                                                       "WHERE a.doctor_id = ? AND LOWER(a.status) = 'confirmed' " +
                                                        "ORDER BY a.appointment_date ASC, a.appointment_time ASC";
                                             pstmt = conn.prepareStatement(sql);
                                             pstmt.setInt(1, doctorId);
@@ -398,7 +401,7 @@
                                                     <td><small><%= rs.getString("symptoms").substring(0, Math.min(50, rs.getString("symptoms").length())) %>...</small></td>
                                                     <td>
                                                         <div class="btn-group btn-group-sm">
-                                                            <a href="viewAppointment.jsp?id=<%= appointmentId %>" 
+                                                            <a href="doctorViewAppointments.jsp?id=<%= appointmentId %>" 
                                                                class="btn btn-outline-primary">
                                                                 <i class="fas fa-eye"></i> View
                                                             </a>
@@ -475,7 +478,7 @@
                                                        "a.symptoms, u.full_name, u.phone, u.email " +
                                                        "FROM appointments a " +
                                                        "JOIN users u ON a.user_id = u.user_id " +
-                                                       "WHERE a.doctor_id = ? AND a.status = 'Completed' " +
+                                                       "WHERE a.doctor_id = ? AND LOWER(a.status) = 'completed' " +
                                                        "ORDER BY a.appointment_date DESC, a.appointment_time DESC";
                                             pstmt = conn.prepareStatement(sql);
                                             pstmt.setInt(1, doctorId);
@@ -497,7 +500,7 @@
                                                     <td><%= rs.getString("appointment_time") %></td>
                                                     <td><small><%= rs.getString("symptoms").substring(0, Math.min(50, rs.getString("symptoms").length())) %>...</small></td>
                                                     <td>
-                                                        <a href="viewAppointment.jsp?id=<%= appointmentId %>" 
+                                                        <a href="doctorViewAppointments.jsp?id=<%= appointmentId %>" 
                                                            class="btn btn-outline-primary btn-sm">
                                                             <i class="fas fa-eye"></i> View Details
                                                         </a>
@@ -563,7 +566,7 @@
                                                        "a.symptoms, u.full_name, u.phone, u.email " +
                                                        "FROM appointments a " +
                                                        "JOIN users u ON a.user_id = u.user_id " +
-                                                       "WHERE a.doctor_id = ? AND a.status = 'Cancelled' " +
+                                                       "WHERE a.doctor_id = ? AND LOWER(a.status) = 'cancelled' " +
                                                        "ORDER BY a.appointment_date DESC, a.appointment_time DESC";
                                             pstmt = conn.prepareStatement(sql);
                                             pstmt.setInt(1, doctorId);
@@ -585,7 +588,7 @@
                                                     <td><%= rs.getString("appointment_time") %></td>
                                                     <td><small><%= rs.getString("symptoms").substring(0, Math.min(50, rs.getString("symptoms").length())) %>...</small></td>
                                                     <td>
-                                                        <a href="viewAppointment.jsp?id=<%= appointmentId %>" 
+                                                        <a href="doctorViewAppointments.jsp?id=<%= appointmentId %>" 
                                                            class="btn btn-outline-secondary btn-sm">
                                                             <i class="fas fa-eye"></i> View Details
                                                         </a>
