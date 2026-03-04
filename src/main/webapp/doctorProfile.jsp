@@ -99,37 +99,15 @@
             <div class="col-md-4">
                 <div class="card shadow border-0 mb-4">
                     <div class="card-body text-center">
-                       <%
-    String photoPath = rs.getString("profile_photo");
-    String drName = rs.getString("full_name");
-    String drInitials = "";
-    String[] drParts = drName.trim().split("\\s+");
-    if (drParts.length >= 2) {
-        drInitials = String.valueOf(drParts[0].charAt(0)).toUpperCase() +
-                     String.valueOf(drParts[drParts.length - 1].charAt(0)).toUpperCase();
-    } else {
-        drInitials = String.valueOf(drParts[0].charAt(0)).toUpperCase();
-    }
-    if (photoPath != null && !photoPath.isEmpty()) {
-%>
-    <img src="<%= photoPath %>" alt="Doctor Photo" class="profile-photo mb-3"
-         onerror="this.style.display='none'; document.getElementById('drAvatarFb').style.display='flex';">
-    <div id="drAvatarFb" style="display:none; width:150px; height:150px; border-radius:50%;
-         background:linear-gradient(135deg,#198754,#20c997); color:white;
-         font-size:3rem; font-weight:700; align-items:center; justify-content:center;
-         border:5px solid #198754; margin:0 auto 12px;
-         box-shadow:0 6px 20px rgba(25,135,84,0.4);">
-        <%= drInitials %>
-    </div>
-<% } else { %>
-    <div style="width:150px; height:150px; border-radius:50%;
-         background:linear-gradient(135deg,#198754,#20c997); color:white;
-         font-size:3rem; font-weight:700; display:flex; align-items:center; justify-content:center;
-         border:5px solid #198754; margin:0 auto 12px;
-         box-shadow:0 6px 20px rgba(25,135,84,0.4);">
-        <%= drInitials %>
-    </div>
-<% } %>
+                        <% 
+                            String photoPath = rs.getString("profile_photo");
+                            if (photoPath != null && !photoPath.isEmpty()) {
+                        %>
+                            <img src="<%= photoPath %>" alt="Doctor Photo" class="profile-photo mb-3">
+                        <% } else { %>
+                            <img src="https://ui-avatars.com/api/?name=<%= rs.getString("full_name") %>&size=150&background=198754&color=fff" 
+                                 alt="Doctor Photo" class="profile-photo mb-3">
+                        <% } %>
                         <h4 class="mb-1">Dr. <%= rs.getString("full_name") %></h4>
                         <p class="text-muted mb-2"><%= rs.getString("specialization") %></p>
                         <p class="text-success"><i class="fas fa-graduation-cap"></i> <%= rs.getString("qualification") %></p>
@@ -143,6 +121,9 @@
                             </button>
                             <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
                                 <i class="fas fa-key"></i> Change Password
+                            </button>
+                            <button class="btn btn-danger btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                                <i class="fas fa-user-times"></i> Delete Account
                             </button>
                         </div>
                     </div>
@@ -516,6 +497,61 @@
                 reader.readAsDataURL(file);
             }
         }
+
+        function toggleDeletePassword() {
+            const input = document.getElementById('deleteConfirmPassword');
+            const icon  = document.getElementById('deleteEyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
     </script>
+
+    <!-- Delete Account Modal -->
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0" style="border-radius:16px; overflow:hidden;">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-exclamation-triangle me-2"></i> Delete Account
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="alert alert-warning mb-3">
+                        <i class="fas fa-shield-alt me-2"></i>
+                        <strong>Your data will be kept safe.</strong><br>
+                        <small>All your appointment history and patient records are retained for medical purposes. You just won't be able to login.</small>
+                    </div>
+                    <p class="text-muted mb-3">Enter your password to confirm account deletion:</p>
+                    <form action="DeleteDoctorAccountServlet" method="post">
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                <input type="password" class="form-control" name="confirmPassword"
+                                       id="deleteConfirmPassword" placeholder="Enter your password" required>
+                                <button type="button" class="btn btn-outline-secondary" onclick="toggleDeletePassword()">
+                                    <i class="fas fa-eye" id="deleteEyeIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash me-2"></i> Yes, Delete My Account
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

@@ -165,7 +165,7 @@
                                                     <td>
                                                         <div class="btn-group btn-group-sm" role="group">
                                                             <!-- View Details Button (Always shown) -->
-                                                            <a href="viewAppointment.jsp?id=<%= appointmentId %>" 
+                                                            <a href="doctorViewAppointments.jsp?id=<%= appointmentId %>" 
                                                                class="btn btn-outline-primary" 
                                                                title="View Details">
                                                                 <i class="fas fa-eye"></i>

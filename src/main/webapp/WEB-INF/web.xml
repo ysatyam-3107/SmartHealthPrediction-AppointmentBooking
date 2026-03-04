@@ -185,6 +185,15 @@
         <url-pattern>/DeleteAccountServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>DeleteDoctorAccountServlet</servlet-name>
+        <servlet-class>com.mycompany.smarthealthprediction.health.servlets.DeleteDoctorAccountServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteDoctorAccountServlet</servlet-name>
+        <url-pattern>/DeleteDoctorAccountServlet</url-pattern>
+    </servlet-mapping>
+
     <!-- Serves uploaded photos from permanent C:/SmartHealthUploads folder -->
     <servlet>
         <servlet-name>FileServlet</servlet-name>
