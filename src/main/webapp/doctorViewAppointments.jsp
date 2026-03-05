@@ -61,7 +61,7 @@
             try {
                 conn = DBConnection.getConnection();
                 String sql = "SELECT a.*, " +
-                             "u.full_name as patient_name, u.email as patient_email, u.phone as patient_phone, u.gender, u.dob, " +
+                             "u.full_name as patient_name, u.email as patient_email, u.phone as patient_phone, u.gender, u.date_of_birth, " +
                              "d.full_name as doctor_name, d.consultation_fee " +
                              "FROM appointments a " +
                              "JOIN users u ON a.user_id = u.user_id " +
@@ -152,8 +152,8 @@
                                 <% if (rs.getString("gender") != null) { %>
                                 <p class="mb-1"><i class="fas fa-venus-mars text-info"></i> <%= rs.getString("gender") %></p>
                                 <% } %>
-                                <% if (rs.getString("dob") != null) { %>
-                                <p class="mb-1"><i class="fas fa-birthday-cake text-warning"></i> <%= rs.getString("dob") %></p>
+                                <% if (rs.getString("date_of_birth") != null) { %>
+                                <p class="mb-1"><i class="fas fa-birthday-cake text-warning"></i> <%= rs.getString("date_of_birth") %></p>
                                 <% } %>
                             </div>
                         </div>
