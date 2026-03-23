@@ -1,6 +1,7 @@
 package com.mycompany.smarthealthprediction.health.servlets;
 
 import com.mycompany.smarthealthprediction.health.db.DBConnection;
+import com.mycompany.smarthealthprediction.health.util.PasswordUtil;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,29 +24,49 @@ public class DoctorLoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         
+        // ✅ BASIC VALIDATION
+        if (email == null || email.trim().isEmpty() || password == null || password.isEmpty()) {
+            response.sendRedirect("doctorLogin.jsp?error=Email and password are required");
+            return;
+        }
+        
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         
         try {
             conn = DBConnection.getConnection();
-            String sql = "SELECT * FROM doctors WHERE email = ? AND password = ?";
+            
+            // ✅ FETCH DOCTOR BY EMAIL ONLY (SECURITY: DON'T INCLUDE PASSWORD IN WHERE)
+            String sql = "SELECT doctor_id, full_name, email, password, specialization FROM doctors WHERE email = ?";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, email);
-            pstmt.setString(2, password);
+            pstmt.setString(1, email.toLowerCase().trim());
             
             rs = pstmt.executeQuery();
             
             if (rs.next()) {
-                HttpSession session = request.getSession();
-                session.setAttribute("doctorId", rs.getInt("doctor_id"));
-                session.setAttribute("doctorName", rs.getString("full_name"));
-                session.setAttribute("doctorEmail", rs.getString("email"));
-                session.setAttribute("specialization", rs.getString("specialization"));
-                session.setAttribute("userType", "doctor");
+                String hashedPassword = rs.getString("password");
                 
-                response.sendRedirect("doctorDashboard.jsp");
+                // ✅ VERIFY PASSWORD USING BCRYPT
+                if (PasswordUtil.verifyPassword(password, hashedPassword)) {
+                    // ✅ PASSWORD CORRECT - CREATE SESSION
+                    HttpSession session = request.getSession();
+                    session.setAttribute("doctorId", rs.getInt("doctor_id"));
+                    session.setAttribute("doctorName", rs.getString("full_name"));
+                    session.setAttribute("doctorEmail", rs.getString("email"));
+                    session.setAttribute("specialization", rs.getString("specialization"));
+                    session.setAttribute("userType", "doctor");
+                    
+                    // ✅ SET SESSION TIMEOUT (30 MINUTES)
+                    session.setMaxInactiveInterval(30 * 60);
+                    
+                    response.sendRedirect("doctorDashboard.jsp");
+                } else {
+                    // ✅ INVALID PASSWORD
+                    response.sendRedirect("doctorLogin.jsp?error=Invalid email or password!");
+                }
             } else {
+                // ✅ DOCTOR NOT FOUND
                 response.sendRedirect("doctorLogin.jsp?error=Invalid email or password!");
             }
             

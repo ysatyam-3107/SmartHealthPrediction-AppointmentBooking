@@ -102,7 +102,7 @@
                                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
                                         <input type="password" class="form-control" name="password" minlength="6" required>
                                     </div>
-                                    <small class="text-muted">At least 6 characters</small>
+                                    <small class="text-muted">At least 8 characters</small>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label fw-bold">Phone Number *</label>
