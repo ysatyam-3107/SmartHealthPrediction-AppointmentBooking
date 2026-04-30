@@ -4,74 +4,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Doctor Login – Smart Health</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
-        <div class="container">
-            <a class="navbar-brand" href="index.jsp"><i class="fas fa-heartbeat"></i> Smart Health</a>
-            <div class="ms-auto">
-                <a href="doctorRegister.jsp" class="btn btn-outline-light">Register</a>
-            </div>
-        </div>
-    </nav>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <div class="container">
-        <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
-            <div class="col-md-5">
-                <div class="card shadow">
-                    <div class="card-header bg-success text-white text-center">
-                        <h4><i class="fas fa-user-md"></i> Doctor Login</h4>
-                    </div>
-                    <div class="card-body p-4">
-                        <% 
-                            String success = request.getParameter("success");
-                            String error = request.getParameter("error");
-                            if (success != null) {
-                        %>
-                            <div class="alert alert-success alert-dismissible fade show">
-                                <%= success %>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        <% } 
-                           if (error != null) {
-                        %>
-                            <div class="alert alert-danger alert-dismissible fade show">
-                                <%= error %>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        <% } %>
-                        
-                        <form action="DoctorLoginServlet" method="post">
-                            <div class="mb-3">
-                                <label class="form-label">Email Address</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                    <input type="email" class="form-control" name="email" placeholder="Enter your email" required>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Password</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                    <input type="password" class="form-control" name="password" placeholder="Enter your password" required>
-                                </div>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-success w-100 mt-3">
-                                <i class="fas fa-sign-in-alt"></i> Login
-                            </button>
-                        </form>
-                        
-                        <div class="text-center mt-3">
-                            <p>Don't have an account? <a href="doctorRegister.jsp">Register here</a></p>
-                            <p><a href="userLogin.jsp">Login as Patient</a></p>
-                        </div>
+        :root {
+            --green-dark: #0a5c3e;
+            --green-mid: #12855a;
+            --green-light: #1db87a;
+            --green-glow: #34e899;
+            --cream: #f7f5f0;
+            --text-dark: #0d1f17;
+            --text-muted: #6b7c74;
+            --border: rgba(18,133,90,0.18);
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            background: var(--cream);
+            overflow: hidden;
+        }
+
+        /* ── LEFT PANEL ── */
+        .panel-left {
+            width: 48%;
+            min-height: 100vh;
+            background: linear-gradient(145deg, var(--green-dark) 0%, var(--green-mid) 55%, var(--green-light) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 48px 52px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* decorative blobs */
+        .panel-left::before {
+            content: '';
+            position: absolute;
+            width: 420px; height: 420px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(52,232,153,0.25) 0%, transparent 70%);
+            top: -80px; right: -100px;
+        }
+        .panel-left::after {
+            content: '';
+            position: absolute;
+            width: 300px; height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            bottom: 60px; left: -60px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            text-decoration: none;
+            z-index: 1;
+        }
+        .brand-icon {
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            display: grid; place-items: center;
+            font-size: 18px;
+            backdrop-filter: blur(6px);
+        }
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            letter-spacing: 0.5px;
+        }
+
+        .panel-left-content {
+            z-index: 1;
+        }
+
+        .panel-tagline {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 4vw, 52px);
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+        .panel-tagline span {
+            color: var(--green-glow);
+        }
+
+        .panel-desc {
+            color: rgba(255,255,255,0.72);
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 1.7;
+            max-width: 340px;
+        }
+
+        .panel-features {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1;
+        }
+        .feature-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 50px;
+            padding: 10px 18px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            width: fit-content;
+        }
+        .feature-pill i { color: var(--green-glow); font-size: 14px; }
+
+        /* ── RIGHT PANEL ── */
+        .panel-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 48px 40px;
+            position: relative;
+            background: var(--cream);
+        }
+
+        .top-nav {
+            position: absolute;
+            top: 32px; right: 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .top-nav span { font-size: 14px; color: var(--text-muted); }
+        .btn-register {
+            background: transparent;
+            border: 1.5px solid var(--green-mid);
+            color: var(--green-mid);
+            border-radius: 50px;
+            padding: 8px 22px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-register:hover {
+            background: var(--green-mid);
+            color: #fff;
+        }
+
+        .form-box {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .form-header {
+            margin-bottom: 36px;
+        }
+        .form-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        .form-header p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* alerts */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13.5px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .alert-success { background: #e6f9f1; color: #0a6640; border: 1px solid #a3e6c8; }
+        .alert-danger  { background: #fff0f0; color: #b91c1c; border: 1px solid #fca5a5; }
+
+        .form-group { margin-bottom: 20px; }
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+        .input-wrap i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 15px;
+            pointer-events: none;
+        }
+        .input-wrap input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14.5px;
+            color: var(--text-dark);
+            background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+        .input-wrap input::placeholder { color: #b5c4bc; }
+        .input-wrap input:focus {
+            border-color: var(--green-mid);
+            box-shadow: 0 0 0 4px rgba(18,133,90,0.08);
+        }
+
+        .row-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        .remember input[type="checkbox"] { accent-color: var(--green-mid); width: 15px; height: 15px; }
+        .forgot { font-size: 13.5px; color: var(--green-mid); text-decoration: none; font-weight: 500; }
+        .forgot:hover { text-decoration: underline; }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--green-mid), var(--green-dark));
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 0.3px;
+            transition: transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 6px 24px rgba(18,133,90,0.3);
+        }
+        .btn-login:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 30px rgba(18,133,90,0.38);
+        }
+        .btn-login:active { transform: translateY(0); }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .form-footer {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .form-footer a { color: var(--green-mid); font-weight: 600; text-decoration: none; }
+        .form-footer a:hover { text-decoration: underline; }
+        .form-footer p + p { margin-top: 8px; }
+
+        /* animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .form-box { animation: fadeUp 0.5s ease both; }
+        .panel-left-content { animation: fadeUp 0.6s 0.1s ease both; }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; overflow: auto; }
+            .panel-left { width: 100%; min-height: 220px; padding: 32px 28px; }
+            .panel-tagline { font-size: 28px; }
+            .panel-features { flex-direction: row; flex-wrap: wrap; }
+            .panel-right { padding: 40px 24px; }
+            .top-nav { top: 20px; right: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LEFT PANEL -->
+    <div class="panel-left">
+        <a href="index.jsp" class="brand">
+            <div class="brand-icon"><i class="fas fa-heartbeat"></i></div>
+            <span class="brand-name">Smart Health</span>
+        </a>
+
+        <div class="panel-left-content">
+            <h2 class="panel-tagline">Smarter Care,<br>Better <span>Outcomes.</span></h2>
+            <p class="panel-desc">A unified platform built for healthcare professionals. Manage appointments, track patients, and collaborate with ease.</p>
+        </div>
+
+        <div class="panel-features">
+            <div class="feature-pill"><i class="fas fa-shield-alt"></i> Secure & Compliant</div>
+            <div class="feature-pill"><i class="fas fa-bolt"></i> Real-time Updates</div>
+            <div class="feature-pill"><i class="fas fa-users"></i> Patient-Centered</div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="panel-right">
+
+        <div class="top-nav">
+            <span>No account?</span>
+            <a href="doctorRegister.jsp" class="btn-register">Register</a>
+        </div>
+
+        <div class="form-box">
+            <div class="form-header">
+                <h1>Doctor Sign In</h1>
+                <p>Welcome back, Doctor. Please enter your credentials.</p>
+            </div>
+
+            <%
+                String success = request.getParameter("success");
+                String error   = request.getParameter("error");
+                if (success != null) {
+            %>
+                <div class="alert alert-success"><i class="fas fa-check-circle"></i> <%= success %></div>
+            <% } if (error != null) { %>
+                <div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <%= error %></div>
+            <% } %>
+
+            <form action="DoctorLoginServlet" method="post">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" name="email" placeholder="doctor@hospital.com" required>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="input-wrap">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                </div>
+
+                <div class="row-between">
+                    <label class="remember">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="#" class="forgot">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    Sign In <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="divider">or</div>
+
+            <div class="form-footer">
+                <p>Don't have an account? <a href="doctorRegister.jsp">Register here</a></p>
+                <p><a href="userLogin.jsp">Login as Patient instead</a></p>
             </div>
         </div>
     </div>
